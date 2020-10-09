@@ -37,7 +37,7 @@ def addX(plaintext):
             )  # adding x in between double letters
             xLength += 1
 
-    print(plaintext)
+    return plaintext
 
 
 def findInKey(char):
@@ -45,12 +45,16 @@ def findInKey(char):
         for letter in range(len(key[row])):
             if char == key[row][letter]:
                 return [row, letter]
-    # TODO: CHECK IF IT IS EVEN IN KEY
+    return []  # if char not in key
 
 
 def verticalEncode(letterPair):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
+
+    if not char1Location or not char2Location:
+        return " ERROR: CHAR NOT PRESENT IN KEY "
+
     codedChar1Loc = [char1Location[0], (char1Location[1] + 1) % 5]
     codedChar2Loc = [char2Location[0], (char2Location[1] + 1) % 5]
     return (
@@ -59,12 +63,13 @@ def verticalEncode(letterPair):
     )
 
 
-print(verticalEncode("af"))
-
-
 def horizontalEncode(letterPair):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
+
+    if not char1Location or not char2Location:
+        return " ERROR: CHAR NOT PRESENT IN KEY "
+
     codedChar1Loc = [(char1Location[0] + 1) % 5, char1Location[1]]
     codedChar2Loc = [(char2Location[0] + 1) % 5, char2Location[1]]
     return (
@@ -73,9 +78,19 @@ def horizontalEncode(letterPair):
     )
 
 
-print(horizontalEncode("ac"))
+def regularEncode(letterPair):
+    char1Location = findInKey(letterPair[0])
+    char2Location = findInKey(letterPair[1])
 
-# def regularEncode(letterPair):
+    if not char1Location or not char2Location:
+        return " ERROR: CHAR NOT PRESENT IN KEY "
+
+    codedChar1Loc = [char1Location[0], char2Location[1]]
+    codedChar2Loc = [char2Location[0], char1Location[1]]
+    return (
+        key[codedChar1Loc[0]][codedChar1Loc[1]]
+        + key[codedChar2Loc[0]][codedChar2Loc[1]]
+    )
 
 
 # addX("committee")
