@@ -13,7 +13,6 @@ text = sys.argv[2]
 keyText = sys.argv[3]
 key = [list(keyText[i : i + 5]) for i in range(0, len(keyText), 5)]
 
-sys.exit()
 
 # print(key)
 
@@ -41,6 +40,44 @@ def addX(plaintext):
     print(plaintext)
 
 
-addX("committee")
-addX("book")
+def findInKey(char):
+    for row in range(len(key)):
+        for letter in range(len(key[row])):
+            if char == key[row][letter]:
+                return [row, letter]
+    # TODO: CHECK IF IT IS EVEN IN KEY
+
+
+def verticalEncode(letterPair):
+    char1Location = findInKey(letterPair[0])
+    char2Location = findInKey(letterPair[1])
+    codedChar1Loc = [char1Location[0], (char1Location[1] + 1) % 5]
+    codedChar2Loc = [char2Location[0], (char2Location[1] + 1) % 5]
+    return (
+        key[codedChar1Loc[0]][codedChar1Loc[1]]
+        + key[codedChar2Loc[0]][codedChar2Loc[1]]
+    )
+
+
+print(verticalEncode("af"))
+
+
+def horizontalEncode(letterPair):
+    char1Location = findInKey(letterPair[0])
+    char2Location = findInKey(letterPair[1])
+    codedChar1Loc = [(char1Location[0] + 1) % 5, char1Location[1]]
+    codedChar2Loc = [(char2Location[0] + 1) % 5, char2Location[1]]
+    return (
+        key[codedChar1Loc[0]][codedChar1Loc[1]]
+        + key[codedChar2Loc[0]][codedChar2Loc[1]]
+    )
+
+
+print(horizontalEncode("ac"))
+
+# def regularEncode(letterPair):
+
+
+# addX("committee")
+# addX("book")
 
