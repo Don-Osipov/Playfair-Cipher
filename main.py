@@ -33,7 +33,7 @@ def addX(plaintext):
     processedMessage = ""
     while len(plaintext) > 0:
         double = plaintext[:2]
-        if len(double) < 2:
+        if len(double) < 2:  # if last letter in text does not have a double
             processedMessage += double[0] + "X"
             plaintext = plaintext[1:]
         elif double[0] == double[1]:
@@ -61,8 +61,10 @@ def verticalEncode(letterPair, direction):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
 
-    if not char1Location or not char2Location:
-        return " ERROR: CHAR NOT PRESENT IN KEY "
+    if not char1Location:
+        char1Location = findInKey("X")
+    if not char2Location:
+        char2Location = findInKey("X")
 
     if direction == "right":  # for ENCODING
         codedChar1Loc = [char1Location[0], (char1Location[1] + 1) % 5]
@@ -84,8 +86,10 @@ def horizontalEncode(letterPair, direction):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
 
-    if not char1Location or not char2Location:
-        return " ERROR: CHAR NOT PRESENT IN KEY "
+    if not char1Location:
+        char1Location = findInKey("X")
+    if not char2Location:
+        char2Location = findInKey("X")
 
     if direction == "down":  # for ENCODING
         codedChar1Loc = [(char1Location[0] + 1) % 5, char1Location[1]]
@@ -107,8 +111,10 @@ def regularEncode(letterPair):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
 
-    if not char1Location or not char2Location:
-        return " ERROR: CHAR NOT PRESENT IN KEY "
+    if not char1Location:
+        char1Location = findInKey("X")
+    if not char2Location:
+        char2Location = findInKey("X")
 
     codedChar1Loc = [char1Location[0], char2Location[1]]
     codedChar2Loc = [char2Location[0], char1Location[1]]
