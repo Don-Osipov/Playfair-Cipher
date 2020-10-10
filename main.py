@@ -9,7 +9,6 @@ if len(sys.argv) < 4:
 # whatToDo = open(sys.argv[1], "r")
 whatToDo = sys.argv[1]
 text = sys.argv[2].upper()
-
 keyText = sys.argv[3].upper()
 
 keyList = [
@@ -21,12 +20,6 @@ for i, letter in enumerate(keyText):
         i // 5,
         i % 5,
     ]  # letter: [row, column] - used to get row/column of a letter quickly
-
-# print(key)
-
-# print(whatToDo)
-# print(text)
-# print(keyText)
 
 
 def preProcessing(plaintext):
@@ -64,15 +57,20 @@ def findInKey(char):
     # return []  # if char not in key
 
 
-def verticalEncode(letterPair):
+def verticalEncode(letterPair, direction):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
 
     if not char1Location or not char2Location:
         return " ERROR: CHAR NOT PRESENT IN KEY "
 
-    codedChar1Loc = [char1Location[0], (char1Location[1] + 1) % 5]
-    codedChar2Loc = [char2Location[0], (char2Location[1] + 1) % 5]
+    if direction == "right":  # for ENCODING
+        codedChar1Loc = [char1Location[0], (char1Location[1] + 1) % 5]
+        codedChar2Loc = [char2Location[0], (char2Location[1] + 1) % 5]
+    elif direction == "left":  # for DECODING
+        codedChar1Loc = [char1Location[0], (char1Location[1] - 1) % 5]
+        codedChar2Loc = [char2Location[0], (char2Location[1] - 1) % 5]
+
     return (
         keyList[codedChar1Loc[0]][codedChar1Loc[1]]
         + keyList[codedChar2Loc[0]][codedChar2Loc[1]]
@@ -82,15 +80,20 @@ def verticalEncode(letterPair):
 # print(verticalEncode("af"))
 
 
-def horizontalEncode(letterPair):
+def horizontalEncode(letterPair, direction):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
 
     if not char1Location or not char2Location:
         return " ERROR: CHAR NOT PRESENT IN KEY "
 
-    codedChar1Loc = [(char1Location[0] + 1) % 5, char1Location[1]]
-    codedChar2Loc = [(char2Location[0] + 1) % 5, char2Location[1]]
+    if direction == "down":  # for ENCODING
+        codedChar1Loc = [(char1Location[0] + 1) % 5, char1Location[1]]
+        codedChar2Loc = [(char2Location[0] + 1) % 5, char2Location[1]]
+    elif direction == "up":  # for DECODING
+        codedChar1Loc = [(char1Location[0] - 1) % 5, char1Location[1]]
+        codedChar2Loc = [(char2Location[0] - 1) % 5, char2Location[1]]
+
     return (
         keyList[codedChar1Loc[0]][codedChar1Loc[1]]
         + keyList[codedChar2Loc[0]][codedChar2Loc[1]]
@@ -109,6 +112,7 @@ def regularEncode(letterPair):
 
     codedChar1Loc = [char1Location[0], char2Location[1]]
     codedChar2Loc = [char2Location[0], char1Location[1]]
+
     return (
         keyList[codedChar1Loc[0]][codedChar1Loc[1]]
         + keyList[codedChar2Loc[0]][codedChar2Loc[1]]
@@ -121,23 +125,26 @@ def regularEncode(letterPair):
 # addX("book")
 
 
-def encode(letterPair):
+def encode(letterPair, encodeOrDecode="encode"):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
 
-    if char1Location and char2Location:
+    verticalDirection = "right" if encodeOrDecode == "encode" else "left"
+    horizontalDirection = "down" if encodeOrDecode == "encode" else "up"
 
-        if (
-            char1Location[0] == char2Location[0]
-            and char1Location[1] != char2Location[1]
-        ):
-            return horizontalEncode(letterPair)
+    if char1Location and char2Location:
 
         if (
             char1Location[0] != char2Location[0]
             and char1Location[1] == char2Location[1]
         ):
-            return verticalEncode(letterPair)
+            return verticalEncode(letterPair, verticalDirection)
+
+        if (
+            char1Location[0] == char2Location[0]
+            and char1Location[1] != char2Location[1]
+        ):
+            return horizontalEncode(letterPair, horizontalDirection)
 
         if (
             char1Location[0] != char2Location[0]
@@ -160,4 +167,21 @@ def encodeMessage(plaintext):
     return encodedMessage
 
 
-print(encodeMessage(text))
+def decodeMessage(encodedMessage):
+    decodedMessage = ""
+
+    for i in range(0, len(encodedMessage), 2):
+        char1 = encodedMessage[i]
+        char2 = encodedMessage[i + 1]
+
+        decodedMessage += encode(char1 + char2, "decode")
+
+    return decodedMessage
+
+
+if whatToDo == "encode":
+    print(encodeMessage(text))
+elif whatToDo == "decode":
+    print(decodeMessage(text))
+else:
+    print(encodeMessage(text))
