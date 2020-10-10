@@ -37,20 +37,19 @@ def preProcessing(plaintext):
 
 
 def addX(plaintext):
-    # ERROR because the range is calculated in the beginning and is not affected by the extra X's being added, so it sometimes doesnt get to the other letters
-    for i in range(0, len(plaintext), 2):
-
-        char1 = plaintext[i]
-        char2 = plaintext[i + 1]
-        if char1 == char2:
-            plaintext = (
-                plaintext[: i + 1] + "X" + plaintext[i + 1 :]
-            )  # adding x in between double letters
-
-    if len(plaintext) % 2 == 1:
-        plaintext += "X"
-
-    return plaintext
+    processedMessage = ""
+    while len(plaintext) > 0:
+        double = plaintext[:2]
+        if len(double) < 2:
+            processedMessage += double[0] + "X"
+            plaintext = plaintext[1:]
+        elif double[0] == double[1]:
+            processedMessage += double[0] + "X"
+            plaintext = plaintext[1:]
+        elif double[0] != double[1]:
+            processedMessage += double[0] + double[1]
+            plaintext = plaintext[2:]
+    return processedMessage
 
 
 def findInKey(char):
