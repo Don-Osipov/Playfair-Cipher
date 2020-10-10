@@ -8,9 +8,9 @@ if len(sys.argv) < 4:
 
 # whatToDo = open(sys.argv[1], "r")
 whatToDo = sys.argv[1]
-text = sys.argv[2]
+text = sys.argv[2].upper()
 
-keyText = sys.argv[3]
+keyText = sys.argv[3].upper()
 
 keyList = [
     list(keyText[i : i + 5]) for i in range(0, len(keyText), 5)
@@ -29,11 +29,16 @@ for i, letter in enumerate(keyText):
 # print(keyText)
 
 
+def preProcessing(plaintext):
+    replaceDict = {"J": "I", " ": "", ",": "", ".": "", "!": "", "?": ""}
+    for before, after in replaceDict.items():
+        plaintext = plaintext.replace(before, after)
+    return plaintext
+
+
 def addX(plaintext):
+    # ERROR because the range is calculated in the beginning and is not affected by the extra X's being added, so it sometimes doesnt get to the other letters
     for i in range(0, len(plaintext), 2):
-        # if len(plaintext) % 2 == 1 and i == len(plaintext) - 1:
-        #     plaintext += "X"  # adding 'x' to the end of the string
-        #     break
 
         char1 = plaintext[i]
         char2 = plaintext[i + 1]
@@ -144,6 +149,7 @@ def encode(letterPair):
 
 def encodeMessage(plaintext):
     encodedMessage = ""
+    plaintext = preProcessing(plaintext)
     plaintext = addX(plaintext)
 
     for i in range(0, len(plaintext), 2):
