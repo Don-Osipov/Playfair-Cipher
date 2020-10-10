@@ -6,7 +6,6 @@ if len(sys.argv) < 4:
     print('usage: ARGS="encode/decode plaintext/ciphertext keytext')
     sys.exit()
 
-# whatToDo = open(sys.argv[1], "r")
 whatToDo = sys.argv[1]
 text = sys.argv[2].upper()
 keyText = sys.argv[3].upper()
@@ -50,12 +49,6 @@ def findInKey(char):
         return key[char]
     return []
 
-    # for row in range(len(key)):
-    #     for letter in range(len(key[row])):
-    #         if char == key[row][letter]:
-    #             return [row, letter]
-    # return []  # if char not in key
-
 
 def verticalEncode(letterPair, direction):
     char1Location = findInKey(letterPair[0])
@@ -77,9 +70,6 @@ def verticalEncode(letterPair, direction):
         keyList[codedChar1Loc[0]][codedChar1Loc[1]]
         + keyList[codedChar2Loc[0]][codedChar2Loc[1]]
     )
-
-
-# print(verticalEncode("af"))
 
 
 def horizontalEncode(letterPair, direction):
@@ -104,9 +94,6 @@ def horizontalEncode(letterPair, direction):
     )
 
 
-# print(horizontalEncode("ac"))
-
-
 def regularEncode(letterPair):
     char1Location = findInKey(letterPair[0])
     char2Location = findInKey(letterPair[1])
@@ -123,12 +110,6 @@ def regularEncode(letterPair):
         keyList[codedChar1Loc[0]][codedChar1Loc[1]]
         + keyList[codedChar2Loc[0]][codedChar2Loc[1]]
     )
-
-
-# print(regularEncode("az"))
-
-# addX("committee")
-# addX("book")
 
 
 def encode(letterPair, encodeOrDecode="encode"):
